@@ -82,7 +82,7 @@ public class CardDeliveryTest {
                 .shouldHave(exactText("Необходимо подтверждение"))
                 .shouldHave(visible, Duration.ofSeconds(15));
         $("[data-test-id=replan-notification] .notification__content")
-                .shouldHave(textCaseSensitive("У вас уже запланирована встреча на другую дату. Перепланировать?"));
+                .shouldHave(textCaseSensitive("у вас уже есть запись на текущую дату"));
         $$("button").find(exactText("Перепланировать")).click();
         $("[data-test-id=success-notification] div.notification__title").shouldBe(exactText("Успешно!"))
                 .shouldHave(visible, Duration.ofSeconds(15));
