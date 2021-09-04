@@ -1,13 +1,16 @@
 package ru.netology.web;
 
+import com.codeborne.selenide.logevents.SelenideLogger;
+import io.qameta.allure.selenide.AllureSelenide;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
 
-import java.time.Duration;
-
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
+import static ru.netology.web.Generator.name;
 import static ru.netology.web.Generator.*;
 
 
@@ -18,6 +21,15 @@ public class CardDeliveryTest {
     void setUpAll() {
         open("http://localhost:9999");
 
+    }
+    @BeforeAll
+    static void setUp() {
+        SelenideLogger.addListener("allure", new AllureSelenide());
+    }
+
+    @AfterAll
+    static void tearDownAll() {
+        SelenideLogger.removeListener("allure");
     }
 
     @Test
@@ -33,18 +45,18 @@ public class CardDeliveryTest {
         $$("button").find(exactText("Запланировать")).click();
         $("[data-test-id=success-notification] .notification__content")
                 .shouldHave(exactText("Встреча успешно запланирована на " + date1))
-                .shouldHave(visible, Duration.ofSeconds(15));
+                .shouldHave(visible);
         $("[data-test-id=date] input").doubleClick().append(date2);
         $$("button").find(exactText("Запланировать")).click();
         $("[data-test-id=replan-notification] .notification__title")
                 .shouldHave(exactText("Необходимо подтверждение"))
-                .shouldHave(visible, Duration.ofSeconds(15));
+                .shouldHave(visible);
         $("[data-test-id=replan-notification] .notification__content")
                 .shouldHave(textCaseSensitive("У вас уже запланирована встреча на другую дату. Перепланировать?"));
         $$("button").find(exactText("Перепланировать")).click();
         $("[data-test-id=success-notification] .notification__content")
                 .shouldBe(exactText("Встреча успешно запланирована на " + date2))
-                .shouldHave(visible, Duration.ofSeconds(15));
+                .shouldHave(visible);
 
     }
 
@@ -58,7 +70,7 @@ public class CardDeliveryTest {
         $$("button").find(exactText("Запланировать")).click();
         $("[data-test-id=city].input_theme_alfa-on-white.input_invalid .input__sub")
                 .shouldBe(exactText("Доставка в выбранный город недоступна"))
-                .shouldHave(visible, Duration.ofSeconds(15));
+                .shouldHave(visible);
     }
     @Test
     void mustScheduleAndRescheduleDateWithTheSameValue() {
@@ -72,23 +84,23 @@ public class CardDeliveryTest {
         $$("button").find(exactText("Запланировать")).click();
         $("[data-test-id=success-notification] div.notification__title")
                 .shouldHave(exactText("Успешно!"))
-                .shouldHave(visible, Duration.ofSeconds(15));
+                .shouldHave(visible);
         $("[data-test-id=success-notification] .notification__content")
                 .shouldHave(exactText("Встреча успешно запланирована на " + date1))
-                .shouldHave(visible, Duration.ofSeconds(15));
+                .shouldHave(visible);
         $("[data-test-id=date] input").doubleClick().append(date1);
         $$("button").find(exactText("Запланировать")).click();
         $("[data-test-id=replan-notification] .notification__title")
                 .shouldHave(exactText("Необходимо подтверждение"))
-                .shouldHave(visible, Duration.ofSeconds(15));
+                .shouldHave(visible);
         $("[data-test-id=replan-notification] .notification__content")
                 .shouldHave(textCaseSensitive("у вас уже есть запись на текущую дату"));
         $$("button").find(exactText("Перепланировать")).click();
         $("[data-test-id=success-notification] div.notification__title").shouldBe(exactText("Успешно!"))
-                .shouldHave(visible, Duration.ofSeconds(15));
+                .shouldHave(visible);
         $("[data-test-id=success-notification] .notification__content")
                 .shouldBe(exactText("Встреча успешно запланирована на " + date1))
-                .shouldHave(visible, Duration.ofSeconds(15));
+                .shouldHave(visible);
 
     }
 
@@ -102,7 +114,7 @@ public class CardDeliveryTest {
         $$("button").find(exactText("Запланировать")).click();
         $("[data-test-id=date] .input_theme_alfa-on-white.input_invalid .input__sub")
                 .shouldBe(exactText("Неверно введена дата"))
-                .shouldHave(visible, Duration.ofSeconds(15));
+                .shouldHave(visible);
     }
 
     @Test
@@ -115,7 +127,7 @@ public class CardDeliveryTest {
         $$("button").find(exactText("Запланировать")).click();
         $("[data-test-id=name].input_theme_alfa-on-white.input_invalid .input__sub")
                 .shouldBe(exactText("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы."))
-                .shouldHave(visible, Duration.ofSeconds(15));
+                .shouldHave(visible);
     }
 
 
@@ -142,7 +154,7 @@ public class CardDeliveryTest {
         $$("button").find(exactText("Запланировать")).click();
         $("[data-test-id=city].input_theme_alfa-on-white.input_invalid .input__sub")
                 .shouldBe(exactText("Поле обязательно для заполнения"))
-                .shouldHave(visible, Duration.ofSeconds(15));
+                .shouldHave(visible);
     }
 
     @Test
@@ -169,7 +181,7 @@ public class CardDeliveryTest {
         $$("button").find(exactText("Запланировать")).click();
         $("[data-test-id=name].input_theme_alfa-on-white.input_invalid .input__sub")
                 .shouldBe(exactText("Поле обязательно для заполнения"))
-                .shouldHave(visible, Duration.ofSeconds(15));
+                .shouldHave(visible);
     }
 
     @Test
@@ -182,7 +194,7 @@ public class CardDeliveryTest {
         $$("button").find(exactText("Запланировать")).click();
         $("[data-test-id=phone].input_theme_alfa-on-white.input_invalid .input__sub")
                 .shouldBe(exactText("Поле обязательно для заполнения"))
-                .shouldHave(visible, Duration.ofSeconds(15));
+                .shouldHave(visible);
 
     }
 
@@ -195,6 +207,6 @@ public class CardDeliveryTest {
         $$("button").find(exactText("Запланировать")).click();
         $("[data-test-id=agreement].input_invalid span.checkbox__text")
                 .shouldBe(exactText("Я соглашаюсь с условиями обработки и использования моих персональных данных"))
-                .shouldHave(visible, Duration.ofSeconds(15));
+                .shouldHave(visible);
     }
 }
